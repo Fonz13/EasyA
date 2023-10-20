@@ -1,1 +1,4 @@
 pix2tex[gui]
+openai
+qdrant-client
+
