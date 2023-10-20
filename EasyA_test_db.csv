@@ -1,0 +1,27 @@
+1,"Funktionen \(f\) ges av \(f(x) = -6 + |x + 3| + |4 - 2x|\). Bestäm alla reella tal \(x\) som löser olikheten \(f(x) < 0\). (Tips: Skissa grafen.)
+",Envariabelsanalys,Funktionslära,"Absolutbelopp
+
+
+",Medium,1
+2,"Beräkna nedanstående integraler.
+
+A. 
+\[
+\int_0^{2\pi} \left| \sin x + \cos x \right| \, dx \quad (\text{tips: dela upp integrationsintervallet})
+\]
+
+B. 
+\[
+\int_1^{e} x^2 \ln x \, dx \quad (\text{tips: använd partiell integration})
+\]",Envariabelsanalys,Funktionslära,"Derivatans definition & deriverbarhet
+
+",Medium,2
+3,"Låt \(f(x) = \sqrt{1 + \tan x}\) vara definierad för \(x \in [0, \pi/2]\).
+\begin{enumerate}
+    \item[(a)] Ange värdemängden till \(f\). (2 p)
+    \item[(b)] Bestäm inversen till \(f\) och ange inversens definitionsmängd. (2 p)
+\end{enumerate}",Envariabelsanalys,Funktionslära,Funktionsinvers,Easy,3
+4,"Låt \(f(x) = \frac{\sin x}{x} + A \arctan x + B\).
+
+Bestäm konstanterna \(A\) och \(B\) så att \(\lim_{x \to 0} f(x) = 3\) och \(\lim_{x \to \infty} f(x) = 0\).",Envariabelsanalys,Funktionslära,Gränsvärde,Medium,4
+5,"Funktionen \( f(x) = \frac{\sin(\pi x)}{\pi x} \) är inte definierad överallt. Kan man ""förbättra"" denna funktion så att den blir definierad och kontinuerlig överallt? Hur gör man det i så fall?",Envariabelsanalys,Funktionslära,Kontinuitet,Easy,5
