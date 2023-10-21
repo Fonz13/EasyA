@@ -45,14 +45,24 @@ if "difficulty_option" not in st.session_state:
 if "sub_area_option" not in st.session_state:
     st.session_state["sub_area_option"] = ""
 
+if "course_option" not in st.session_state:
+    st.session_state["course_option"] = ""
+
+if "area_option" not in st.session_state:
+    st.session_state["area_option"] = ""
+
 
 database = pd.read_csv(
     "/Users/fonzieforsman/Desktop/github/EasyA/db/EasyA_Single_Variable_Calculus.csv"
 )
 sub_area_list = ["All"]
 difficulty_list = ["All"]
+course_list = ["All"]
+area_list = ["All"]
 sub_area_list.extend(database["Sub Area"].unique().tolist())
 difficulty_list.extend(database["Difficulty"].unique().tolist())
+course_list.extend(database["Course"].unique().tolist())
+area_list.extend(database["Area"].unique().tolist())
 
 
 def text_to_list(text):
@@ -74,23 +84,35 @@ def text_to_list(text):
     return t_s
 
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.session_state["difficulty_option"] = st.radio(
-        "Select which difficulty the question should be 👉",
-        key="difficulty",
-        options=difficulty_list,
+    st.session_state["course_option"] = st.radio(
+        "Select from which course the question should be from 👉",
+        key="course",
+        options=course_list,
     )
+
 with col2:
+    st.session_state["area_option"] = st.radio(
+        "Select from which course the question should be from 👉",
+        key="area",
+        options=area_list,
+    )
+
+with col3:
     st.session_state["sub_area_option"] = st.radio(
         "Select which sub-area the question should belong to 👉",
         key="sub_area",
         options=sub_area_list,
     )
 
-
-st.write(st.session_state["difficulty_option"])
+with col4:
+    st.session_state["difficulty_option"] = st.radio(
+        "Select which difficulty the question should be 👉",
+        key="difficulty",
+        options=difficulty_list,
+    )
 
 
 # Logic to pick a question from database
