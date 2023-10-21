@@ -77,7 +77,7 @@ if st.button('Generate next step') and st.session_state['uploaded_file'] :
         k,v = st.session_state['text'][i]
         st.markdown(k)
         st.markdown(v)   
-    st.session_state['count'] += 1
+        st.session_state['count'] += 1
     
 
     

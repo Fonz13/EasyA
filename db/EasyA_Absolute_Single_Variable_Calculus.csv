@@ -1,0 +1,35 @@
+Entry,Course,Area,Sub Area,Difficulty,Question,Theory
+1,SF1625,Function Theory,Absolute Value,Medium,"\textbf{2. Calculate the following integrals:}
+
+\textbf{A.}
+$$ \int_0^{2\pi} | \sin(x) + \cos(x) | \, dx $$
+\textit{(Hint: split the interval of integration)}
+
+\textbf{B.}
+$$ \int_1^{e} x^2 \ln(x) \, dx $$
+\textit{(Hint: use integration by parts)}",
+2,SF1626,Function Theory,Absolute Value,Easy,"\textbf{3. Determine whether the function} 
+$$ f(x) = |2x - 1| + \arcsin(x) $$
+\textbf{takes on a maximum or minimum value and find these values if they exist. The answer should be simplified as much as possible.}",
+3,SF1627,Function Theory,Absolute Value,Medium,"\textbf{3. The function} \( f \) \textbf{is given by} 
+$$ f(x) = -6 + |x + 3| + |4 - 2x| $$
+\textbf{Determine all real numbers} \( x \) \textbf{that solve the inequality} 
+$$ f(x) < 0 $$
+\textit{(Hint: Sketch the graph.)} \quad (4 p)",
+4,SF1628,Function Theory,Absolute Value,Medium,"\textbf{1. Draw the function graph for the function} 
+$$ f(x) = |x - 3| + |x| - 4 $$
+\quad (6 p)",
+5,SF1629,Function Theory,Absolute Value,Medium,"\textbf{1. Let} 
+$$ f(x) = \frac{x^2 - 1}{|x - 1|}, \quad \text{with} \quad x \neq 1. $$
+(a) \textbf{Determine the limit} 
+$$ \lim_{{x \to 1^+}} f(x) $$
+\quad (2 p)
+
+(b) \textbf{Decide if the limit} 
+$$ \lim_{{x \to 1}} f(x) $$
+\textbf{exists.}
+\quad (2 p)
+
+(c) \textbf{For which values of} $x$ \textbf{is it true that} 
+$$ f(x) < 1? $$
+\quad (2 p)",
