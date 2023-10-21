@@ -5,16 +5,18 @@ import openai
 from dotenv import load_dotenv
 import os
 import re
+
 load_dotenv()
-openai.api_key = os.getenv('OPEN_AI_KEY')
+openai.api_key = os.getenv("OPEN_AI_KEY")
 
 st.markdown("<style>footer {display:none;}</style>", unsafe_allow_html=True)
 st.title("EasyA")
-uploaded_file = st.file_uploader("Upload your file here...", type=['png', 'jpg', 'jpeg'])
+uploaded_file = st.file_uploader(
+    "Upload your file here...", type=["png", "jpg", "jpeg"]
+)
 
 
 model = LatexOCR()
-
 
 
 text = r"""## Step 1: Find the derivative of the given function
@@ -57,46 +59,36 @@ import re
 pattern = r"## (.*?)\n(.*?)(?=##|$)"
 
 
+if "count" not in st.session_state:
+    st.session_state["count"] = 1
+
+if "uploaded_file" not in st.session_state:
+    st.session_state["uploaded_file"] = False
+
+if "text" not in st.session_state:
+    st.session_state["text"] = []
 
 
-
-if 'count' not in st.session_state:
-    st.session_state['count'] = 1
-    
-if 'uploaded_file' not in st.session_state:
-    st.session_state['uploaded_file'] = False
-    
-if 'text' not in st.session_state:
-    st.session_state['text'] = []
-
-
-
-if st.button('Generate next step') and st.session_state['uploaded_file'] :
-    print(st.session_state['count'])
-    for i in range(st.session_state['count']):
-        k,v = st.session_state['text'][i]
+if st.button("Generate next step") and st.session_state["uploaded_file"]:
+    print(st.session_state["count"])
+    for i in range(st.session_state["count"]):
+        k, v = st.session_state["text"][i]
         st.markdown(k)
-        st.markdown(v)   
-        st.session_state['count'] += 1
-    
-
-    
-   
-    
-    
+        st.markdown(v)
+        st.session_state["count"] += 1
 
 
 if uploaded_file is not None:
-    if st.session_state['uploaded_file']== True:
-        st.session_state['count'] = 1
-        st.session_state['text'] = []
-        
-    st.session_state['uploaded_file'] = True
+    if st.session_state["uploaded_file"] == True:
+        st.session_state["count"] = 1
+        st.session_state["text"] = []
+
+    st.session_state["uploaded_file"] = True
     image = Image.open(uploaded_file)
-    
+
     prompt = model(image)
-    
-    message = f'''Answer the following prompt about an assignment. 
+
+    message = f"""Answer the following prompt about an assignment. 
     If the answer contains math, wrap all equations and expressions by wrapping them in "$" or "$$" and split up each step of the answer in subsections . 
     
     Follow these step in your response:
@@ -114,18 +106,20 @@ if uploaded_file is not None:
     Assignment Description:  
     {prompt} 
 
-        
-    '''.strip()
-    
-    #preprocess prompt
-    
-    response= openai.ChatCompletion.create(
+    """.strip()
+
+    # preprocess prompt
+
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-                {"role": "system", "content": "You are a helpful assistant that reads math questions and create similair new ones."},
-                {"role": "user", "content": message}
-        ]
-        )
+            {
+                "role": "system",
+                "content": "You are a helpful assistant that reads math questions and create similair new ones.",
+            },
+            {"role": "user", "content": message},
+        ],
+    )
     matches = re.findall(pattern, text, re.DOTALL)
 
     # Convert matches to a dictionary
@@ -133,8 +127,7 @@ if uploaded_file is not None:
 
     t_s = []
     for k, v in result_dict.items():
-        t_s.append(("## "+k, v))
-        
-    st.session_state['text'] = t_s
-    #st.markdown(fr''' {response.choices[0].message.content} ''')
+        t_s.append(("## " + k, v))
 
+    st.session_state["text"] = t_s
+    # st.markdown(fr''' {response.choices[0].message.content} ''')
