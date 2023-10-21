@@ -5,64 +5,46 @@ import openai
 from dotenv import load_dotenv
 import os
 import re
-load_dotenv()
+import pandas as pd
 import re
-openai.api_key = os.getenv('OPEN_AI_KEY')
+
+load_dotenv()
+openai.api_key = os.getenv("OPEN_AI_KEY")
+
 
 st.markdown("<style>footer {display:none;}</style>", unsafe_allow_html=True)
 st.title("EasyA")
 
-
+# enables loading images
 model = LatexOCR()
 
+SOLUTION_INDEX = 2
 
+if "count" not in st.session_state:
+    st.session_state["count"] = SOLUTION_INDEX
 
-text = r"""## Step 1: Find the derivative of the given function
-To find the derivative of a function with respect to x, we need to differentiate each term of the function using the rules of differentiation.
+if "text" not in st.session_state:
+    st.session_state["text"] = []
 
-The given function is:
-$$ f(x) = 3x^2 - 4x + 7 $$
+if "disabled" not in st.session_state:
+    st.session_state["disabled"] = True
 
-To differentiate each term, we apply the power rule and the constant rule of differentiation.
+if "disabled_solve" not in st.session_state:
+    st.session_state["disabled_solve"] = True
 
-The power rule states that the derivative of x raised to the power of n is n times x raised to the power of n-1.
+if "question_index" not in st.session_state:
+    st.session_state["question_index"] = 0
 
-The constant rule states that the derivative of a constant is 0.
+if "question_output" not in st.session_state:
+    st.session_state["question_output"] = []
 
-Differentiating each term of the given function, we have:
-
-$$ f'(x) = \frac{d}{dx}(3x^2) - \frac{d}{dx}(4x) + \frac{d}{dx}(7) $$
-## Step 1.5: Additional Challenge
-
-Applying the power rule and constant rule, we get:
-
-$$ f'(x) = 6x^{2-1} - 4 \cdot 1 + 0 $$
-
-Simplifying further:
-
-$$ f'(x) = 6x - 4 $$ 
-
-Therefore, the derivative of the given function with respect to x is:
-$$ f'(x) = 6x - 4 $$
-
-
-## Step 2: Additional Challenge
-If you want an additional challenge, you can try finding the second derivative of the given function.
-
-"""
-
-
-if 'count' not in st.session_state:
-    st.session_state['count'] = 1
-        
-if 'text' not in st.session_state:
-    st.session_state['text'] = []
-    
-if 'disabled' not in st.session_state:
-    st.session_state['disabled'] = False
-    
 
 def text_to_list(text):
+    """
+    Takes a prompt formatted as a markdown string and returns a list of tuples
+    key: ## TITLE
+    value: CONTENT
+    """
     # Regular expression pattern to match titles and content
     pattern = r"## (.*?)\n(.*?)(?=##|$)"
     matches = re.findall(pattern, text, re.DOTALL)
@@ -71,31 +53,117 @@ def text_to_list(text):
 
     t_s = []
     for k, v in result_dict.items():
-        t_s.append(("## "+k, v))
-        
+        t_s.append(("## " + k, v))
+
     return t_s
 
 
+database = pd.read_csv(
+    "/Users/fonzieforsman/Desktop/github/EasyA/db/EasyA_Single_Variable_Calculus.csv"
+)
 
 
-if st.button('get text'):
-    st.session_state['text'] = text_to_list(text)
-    st.session_state['count'] = 1
-    st.session_state['disabled'] = False
+# Logic to pick a question from database
+if st.button(f"Get question {st.session_state['question_index']+1}"):
+    st.markdown(database.Question.iloc[st.session_state["question_index"]])
+    st.session_state["question_output"] = (
+        "# Question:",
+        database.Question.iloc[st.session_state["question_index"]],
+    )
+    st.session_state["disabled"] = True
+    st.session_state["disabled_solve"] = False
+    st.session_state["question_index"] = (
+        st.session_state["question_index"] + 1
+        if st.session_state["question_index"] < len(database) - 1
+        else 0
+    )
 
 
+if st.button(
+    "Generate a similair Question", disabled=st.session_state["disabled_solve"]
+):
+    message = f"""Generate a similar question as this assignment:
+    {st.session_state['question_output'][1]} 
+    
+    I wan't a similar one of both in design and difficulty:  
+    
+    Wrap all equations and expressions by wrapping them in "$" or "$$". 
+    For example, here is how you do a math equation in Markdown in the desired output:
+    $$ x^2 + y^2 = z^2 $$
+    
+    Only answer with the assignment.
+
+    """.strip()
+
+    # preprocess prompt
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant that reads math questions and create similair new ones.",
+            },
+            {"role": "user", "content": message},
+        ],
+        temperature=0.9,
+    )
+
+    st.session_state["question_output"] = (
+        "# Question:",
+        response.choices[0].message.content,
+    )
+    st.markdown(response.choices[0].message.content)
+    st.session_state["disabled"] = True
+    st.session_state["disabled_solve"] = False
+
+if st.button("Solve problem", disabled=st.session_state["disabled_solve"]):
+    message = f"""Answer the following prompt about an assignment. 
+    If the answer contains math, wrap all equations and expressions by wrapping them in "$" or "$$" and split up each step of the answer in subsections . 
+    
+    Follow these step in your response:
+    <example>
+    ## Step 1: Explain the first step 
+    Here is how you do a math equation in Markdown:
+    $$ x^2 + y^2 = z^2 $$
+
+    ## Step 2: Explain the second step
+    $$ x^2 + y^2 = z^2 $$
+    </example>
 
 
-if st.button('Generate next step', disabled=st.session_state.disabled):
-    if st.session_state['count'] == len(st.session_state['text'])-1:
+    Take a deep breath, and solve this problem step-by-step:
+    Assignment Description:  
+    {st.session_state['question_output']} 
+
+    """.strip()
+
+    # preprocess prompt
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant that reads math questions and solves them.",
+            },
+            {"role": "user", "content": message},
+        ],
+        temperature=0.9,
+    )
+    text_list = [st.session_state["question_output"]]
+    text_list.extend(text_to_list(response.choices[0].message.content))
+    st.session_state["text"] = text_list
+    st.session_state["count"] = 2
+    st.session_state["disabled"] = False
+
+
+if st.button("Generate next step", disabled=st.session_state.disabled):
+    st.session_state["disabled_solve"] = True
+    if st.session_state["count"] == len(st.session_state["text"]) - 1:
         st.session_state.disabled = True
 
-    if st.session_state['count'] <= len(st.session_state['text']):
-        for i in range(st.session_state['count']):
-            k,v = st.session_state['text'][i]
+    if st.session_state["count"] <= len(st.session_state["text"]):
+        for i in range(st.session_state["count"]):
+            k, v = st.session_state["text"][i]
             st.markdown(k)
-            st.markdown(v) 
-        st.session_state['count'] += 1
-        
-        
-    
+            st.markdown(v)
+        st.session_state["count"] += 1

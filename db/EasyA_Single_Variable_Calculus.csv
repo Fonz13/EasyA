@@ -1,0 +1,43 @@
+Entry,Course,Area,Sub Area,Difficulty,Question,Theory
+1,SF1625,Function Theory,Absolute Value,Medium,"Calculate the following integrals:
+
+A:
+$$ \int_0^{2\pi} | \sin(x) + \cos(x) | \, dx $$
+(Hint: split the interval of integration)
+
+B:
+$$ \int_1^{e} x^2 \ln(x) \, dx $$
+(Hint: use integration by parts)
+",
+2,SF1626,Function Theory,Absolute Value,Easy,"Determine whether the function:
+$$ f(x) = |2x - 1| + \arcsin(x) $$
+takes on a maximum or minimum value and find these values if they exist. The answer should be simplified as much as possible.
+",
+3,SF1627,Function Theory,Absolute Value,Medium,"The function:
+$$ f(x) = -6 + |x + 3| + |4 - 2x| $$
+Determine all real numbers \( x \) that solve the inequality:
+$$ f(x) < 0 $$
+(Hint: Sketch the graph.) (4 p)
+",
+4,SF1628,Function Theory,Absolute Value,Medium,"Draw the function graph for the function:
+$$ f(x) = |x - 3| + |x| - 4 $$
+(6 p)
+",
+5,SF1629,Function Theory,Absolute Value,Medium,"Let:
+$$ f(x) = \frac{x^2 - 1}{|x - 1|}, \quad \text{with} \quad x \neq 1. $$
+
+(a) Determine the limit:
+$$ \lim_{{x \to 1^+}} f(x) $$
+(2 p)
+
+(b) Decide if the limit:
+$$ \lim_{{x \to 1}} f(x) $$
+exists.
+(2 p)
+
+(c) For which values of:
+$$ x $$
+is it true that:
+$$ f(x) < 1? $$
+(2 p)
+",
