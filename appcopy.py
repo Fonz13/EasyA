@@ -16,7 +16,7 @@ st.markdown("<style>footer {display:none;}</style>", unsafe_allow_html=True)
 st.title("EasyA")
 
 # enables loading images
-model = LatexOCR()
+#model = LatexOCR()
 
 SOLUTION_INDEX = 2
 
@@ -53,7 +53,7 @@ if "area_option" not in st.session_state:
 
 
 database = pd.read_csv(
-    "/Users/fonzieforsman/Desktop/github/EasyA/db/EasyA_Single_Variable_Calculus.csv"
+    "/Users/jesperonell/Documents/Hackathon/EasyA/db/EasyA_Single_Variable_Calculus.csv"
 )
 sub_area_list = ["All"]
 difficulty_list = ["All"]
